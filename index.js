@@ -38,6 +38,21 @@ async function run (){
         res.send(result);
      })
 
+     // get
+     app.get('/books', async(req, res)=>{
+        const cursor = booksCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+     })
+
+     // single book
+     app.get('/books/:id', async(req, res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await booksCollection.findOne(query);
+        res.send(result);
+     })
+
       // UPDATE a book
     app.patch('/books/:id', async (req, res) => {
       const id = req.params.id;
@@ -45,8 +60,12 @@ async function run (){
       const query = {_id: new ObjectId(id)}
       const update = {
         $set: {
-            name: updatedBook.name,
-            price:updatedBook.price
+            title: updatedBook.title,
+            author: updatedBook.author,
+            genre: updatedBook.genre,
+            rating: updatedBook.rating,
+            summary: updatedBook.summary,
+            coverImage: updatedBook.coverImage,
         }
       }
       const result = await booksCollection.updateOne(query, update)
